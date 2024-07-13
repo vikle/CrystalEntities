@@ -4,7 +4,7 @@
         : Handler<T>
         , IUpdateSystem where T : struct, IRequest
     {
-        protected override void OnHandle(int entity)
+        protected override void OnHandle(IContext context, int entity)
         {
             if (m_data1[entity].IsCompleted)
             {

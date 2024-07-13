@@ -66,25 +66,19 @@ namespace CrystalEntities
 
         private void InjectDependencies()
         {
-            var context_type = GetType();
             var pool_type = typeof(IPool);
             const BindingFlags k_binding_flags = (BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
 
             for (int i = 0, i_max = m_allSystems.Length; i < i_max; i++)
             {
                 var system = m_allSystems[i];
-                var system_fields = system.GetType().GetFields(k_binding_flags);
+                var system_type = system.GetType();
+                var system_fields = system_type.GetFields(k_binding_flags);
                 
                 for (int j = 0, j_max = system_fields.Length; j < j_max; j++)
                 {
                     var field = system_fields[j];
                     var field_type = field.FieldType;
-
-                    if (field_type.IsAssignableFrom(context_type))
-                    {
-                        field.SetValue(system, this);
-                        continue;
-                    }
 
                     if (pool_type.IsAssignableFrom(field_type))
                     {

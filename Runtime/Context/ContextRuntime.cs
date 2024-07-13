@@ -18,43 +18,6 @@ namespace CrystalEntities
     partial class Context
     {
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public void RunAwake()
-        {
-            for (int i = 0, i_max = m_allSystems.Length; i < i_max; i++)
-            {
-                if (m_allSystems[i] is IAwakeSystem system)
-                {
-                    RunOnAwake(system);
-                    RunOnAwake_Debug(system);
-                }
-            }
-        }
-
-        [Conditional("CRYSTAL_ENTITIES_RELEASE"), MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private static void RunOnAwake(IAwakeSystem system)
-        {
-            ProfilerAPI.BeginSample(system.GetType().Name);
-            system.OnAwake();
-            ProfilerAPI.EndSample();
-        }
-        
-        [Conditional("CRYSTAL_ENTITIES_DEBUG"), MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private static void RunOnAwake_Debug(IAwakeSystem system)
-        {
-            try
-            {
-                ProfilerAPI.BeginSample(system.GetType().Name);
-                system.OnAwake();
-                ProfilerAPI.EndSample();
-            }
-            catch (Exception e)
-            {
-                LoggerAPI.LogException(e);
-            }
-        }
-        
-        
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void RunStart()
         {
             for (int i = 0, i_max = m_allSystems.Length; i < i_max; i++)
@@ -68,20 +31,20 @@ namespace CrystalEntities
         }
         
         [Conditional("CRYSTAL_ENTITIES_RELEASE"), MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private static void RunOnStart(IStartSystem system)
+        private void RunOnStart(IStartSystem system)
         {
             ProfilerAPI.BeginSample(system.GetType().Name);
-            system.OnStart();
+            system.OnStart(this);
             ProfilerAPI.EndSample();
         }
         
         [Conditional("CRYSTAL_ENTITIES_DEBUG"), MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private static void CallStart_Debug(IStartSystem system)
+        private void CallStart_Debug(IStartSystem system)
         {
             try
             {
                 ProfilerAPI.BeginSample(system.GetType().Name);
-                system.OnStart();
+                system.OnStart(this);
                 ProfilerAPI.EndSample();
             }
             catch (Exception e)
@@ -89,7 +52,6 @@ namespace CrystalEntities
                 LoggerAPI.LogException(e);
             }
         }
-        
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void RunFixedUpdate()
@@ -107,7 +69,7 @@ namespace CrystalEntities
 #if CRYSTAL_ENTITIES_PROFILING
             ProfilerAPI.BeginSample(m_fixedUpdateSystemsNames[index]);
 #endif
-            m_fixedUpdateSystems[index].OnFixedUpdate();
+            m_fixedUpdateSystems[index].OnFixedUpdate(this);
 #if CRYSTAL_ENTITIES_PROFILING
             ProfilerAPI.EndSample();
 #endif
@@ -121,7 +83,7 @@ namespace CrystalEntities
 #if CRYSTAL_ENTITIES_PROFILING
                 ProfilerAPI.BeginSample(m_fixedUpdateSystemsNames[index]);
 #endif
-                m_fixedUpdateSystems[index].OnFixedUpdate();
+                m_fixedUpdateSystems[index].OnFixedUpdate(this);
 #if CRYSTAL_ENTITIES_PROFILING
                 ProfilerAPI.EndSample();
 #endif
@@ -149,7 +111,7 @@ namespace CrystalEntities
 #if CRYSTAL_ENTITIES_PROFILING
             ProfilerAPI.BeginSample(m_updateSystemsNames[index]);
 #endif
-            m_updateSystems[index].OnUpdate();
+            m_updateSystems[index].OnUpdate(this);
 #if CRYSTAL_ENTITIES_PROFILING
             ProfilerAPI.EndSample();
 #endif
@@ -163,7 +125,7 @@ namespace CrystalEntities
 #if CRYSTAL_ENTITIES_PROFILING
                 ProfilerAPI.BeginSample(m_updateSystemsNames[index]);
 #endif
-                m_updateSystems[index].OnUpdate();
+                m_updateSystems[index].OnUpdate(this);
 #if CRYSTAL_ENTITIES_PROFILING
                 ProfilerAPI.EndSample();
 #endif
@@ -191,7 +153,7 @@ namespace CrystalEntities
 #if CRYSTAL_ENTITIES_PROFILING
             ProfilerAPI.BeginSample(m_lateUpdateSystemsNames[index]);
 #endif
-            m_lateUpdateSystems[index].OnLateUpdate();
+            m_lateUpdateSystems[index].OnLateUpdate(this);
 #if CRYSTAL_ENTITIES_PROFILING
             ProfilerAPI.EndSample();
 #endif
@@ -205,7 +167,7 @@ namespace CrystalEntities
 #if CRYSTAL_ENTITIES_PROFILING
                 ProfilerAPI.BeginSample(m_lateUpdateSystemsNames[index]);
 #endif
-                m_lateUpdateSystems[index].OnLateUpdate();
+                m_lateUpdateSystems[index].OnLateUpdate(this);
 #if CRYSTAL_ENTITIES_PROFILING
                 ProfilerAPI.EndSample();
 #endif

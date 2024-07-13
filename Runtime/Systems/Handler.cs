@@ -13,35 +13,34 @@ namespace CrystalEntities
     public abstract class Handler<T> 
         where T : struct, IFragment
     {
-        protected readonly IContext m_context;
         protected readonly IPool<T> m_data1;
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public virtual void OnFixedUpdate()
+        public virtual void OnFixedUpdate(IContext context)
         {
-            UpdateInternal();
+            UpdateInternal(context);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public virtual void OnUpdate()
+        public virtual void OnUpdate(IContext context)
         {
-            UpdateInternal();
+            UpdateInternal(context);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public virtual void OnLateUpdate()
+        public virtual void OnLateUpdate(IContext context)
         {
-            UpdateInternal();
+            UpdateInternal(context);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private void UpdateInternal()
+        private void UpdateInternal(IContext context)
         {
-            foreach (int entity in m_context)
+            foreach (int entity in context)
             {
                 if (IsCanHandle(entity))
                 {
-                    OnHandle(entity);
+                    OnHandle(context, entity);
                 }
             }
         }
@@ -53,7 +52,7 @@ namespace CrystalEntities
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        protected abstract void OnHandle(int entity);
+        protected abstract void OnHandle(IContext context, int entity);
     };
     
     public abstract class Handler<T1, T2> : Handler<T1>
@@ -65,7 +64,8 @@ namespace CrystalEntities
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         protected override bool IsCanHandle(int entity)
         {
-            return base.IsCanHandle(entity) && m_data2.Contains(entity);
+            return base.IsCanHandle(entity) 
+                && m_data2.Contains(entity);
         }
     };
     
@@ -79,7 +79,8 @@ namespace CrystalEntities
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         protected override bool IsCanHandle(int entity)
         {
-            return base.IsCanHandle(entity) && m_data3.Contains(entity);
+            return base.IsCanHandle(entity) 
+                && m_data3.Contains(entity);
         }
     };
     
@@ -93,7 +94,10 @@ namespace CrystalEntities
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         protected override bool IsCanHandle(int entity)
-            => base.IsCanHandle(entity) && m_data4.Contains(entity);
+        {
+            return base.IsCanHandle(entity)
+                && m_data4.Contains(entity);
+        }
     };
     
     public abstract class Handler<T1, T2, T3, T4, T5> : Handler<T1, T2, T3, T4>
@@ -108,7 +112,8 @@ namespace CrystalEntities
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         protected override bool IsCanHandle(int entity)
         {
-            return base.IsCanHandle(entity) && m_data5.Contains(entity);
+            return base.IsCanHandle(entity) 
+                && m_data5.Contains(entity);
         }
     };
     
@@ -125,7 +130,8 @@ namespace CrystalEntities
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         protected override bool IsCanHandle(int entity)
         {
-            return base.IsCanHandle(entity) && m_data6.Contains(entity);
+            return base.IsCanHandle(entity) 
+                && m_data6.Contains(entity);
         }
     };
     
@@ -143,7 +149,8 @@ namespace CrystalEntities
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         protected override bool IsCanHandle(int entity)
         {
-            return base.IsCanHandle(entity) && m_data7.Contains(entity);
+            return base.IsCanHandle(entity) 
+                && m_data7.Contains(entity);
         }
     };
     
@@ -162,7 +169,8 @@ namespace CrystalEntities
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         protected override bool IsCanHandle(int entity)
         {
-            return base.IsCanHandle(entity) && m_data8.Contains(entity);
+            return base.IsCanHandle(entity) 
+                && m_data8.Contains(entity);
         }
     };
 }

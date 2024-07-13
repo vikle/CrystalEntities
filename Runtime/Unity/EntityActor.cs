@@ -21,7 +21,7 @@ namespace CrystalEntities
 
         static EntityActor()
         {
-            sr_context = EntitiesEngine.Context;
+            sr_context = ECSEngine.Context;
         }
 
         protected EntityActor()

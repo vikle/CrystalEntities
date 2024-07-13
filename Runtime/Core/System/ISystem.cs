@@ -4,29 +4,24 @@ namespace CrystalEntities
     public interface ISystem
     {
     };
-
-    public interface IAwakeSystem : ISystem
-    {
-        void OnAwake();
-    };
     
     public interface IStartSystem : ISystem
     {
-        void OnStart();
+        void OnStart(IContext context);
     };
 
     public interface IUpdateSystem : ISystem
     {
-        void OnUpdate();
+        void OnUpdate(IContext context);
     };
     
     public interface IFixedUpdateSystem : ISystem
     {
-        void OnFixedUpdate();
+        void OnFixedUpdate(IContext context);
     };
 
     public interface ILateUpdateSystem : ISystem
     {
-        void OnLateUpdate();
+        void OnLateUpdate(IContext context);
     };
 }
