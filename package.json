@@ -1,0 +1,24 @@
+{
+  "name": "com.vikle.crystal-entities",
+  "displayName": "Crystal Entities",
+   "description": "Data oriented and cache friendly ECS (Entity Component System) framework for Unity.",
+  "version": "1.0.0",
+  "unity": "2019.4", 
+  "license": "MIT",
+  "repository": {
+    "url": "https://github.com/vikle/CrystalEntities.git",
+	"type": "git"
+  },
+  "author": {
+    "name": "vikle",
+    "email": "",
+    "url": "https://github.com/vikle"
+  },
+  "keywords": [
+    "unity",
+    "ecs",
+    "entity",
+	"component",
+	"system"
+  ]
+}
