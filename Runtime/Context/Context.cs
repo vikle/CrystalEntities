@@ -35,6 +35,8 @@ namespace CrystalEntities
         IFixedUpdateSystem[] m_fixedUpdateSystems;
         IUpdateSystem[] m_updateSystems;
         ILateUpdateSystem[] m_lateUpdateSystems;
+        IEntityInitializeSystem[] m_entityInitializeSystems;
+        IEntityTerminateSystem[] m_entityTerminateSystems;
 
         List<IComposite> m_compositesCache;
         List<ISystem> m_systemsCache;
@@ -44,6 +46,8 @@ namespace CrystalEntities
         string[] m_fixedUpdateSystemsNames;
         string[] m_updateSystemsNames;
         string[] m_lateUpdateSystemsNames;
+        string[] m_entityInitializeSystemsNames;
+        string[] m_entityTerminateSystemsNames;
 #endif
         
         public IReadOnlyList<bool> Entities
@@ -77,26 +81,31 @@ namespace CrystalEntities
             for (int id = 0; id < current_entities_count; id++)
             {
                 if (m_entities[id]) continue;
+                RunAfterEntityCreated(id);
                 m_entities[id] = true;
                 return id;
             }
 
             int new_entities_count = ++m_entitiesCount;
             ArrayEx.EnsureCapacity(ref m_entities, new_entities_count);
-            
-            m_entities[current_entities_count] = true;
 
             for (int i = 0, i_max = m_allPools.Length; i < i_max; i++)
             {
                 m_allPools[i].EnsureCapacity(new_entities_count);
             }
-            
+
+            RunAfterEntityCreated(current_entities_count);
+
+            m_entities[current_entities_count] = true;
+
             return current_entities_count;
         }
 
         public void DestroyEntity(int entity)
         {
             m_entities[entity] = false;
+
+            RunBeforeEntityDestroyed(entity);
             
             for (int i = 0, i_max = m_allPools.Length; i < i_max; i++)
             {

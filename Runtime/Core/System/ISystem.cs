@@ -24,4 +24,14 @@ namespace CrystalEntities
     {
         void OnLateUpdate(IContext context);
     };
+        
+    public interface IEntityInitializeSystem : ISystem
+    {
+        void OnAfterEntityCreated(IContext context, int entity);
+    };
+    
+    public interface IEntityTerminateSystem: ISystem
+    {
+        void OnBeforeEntityDestroyed(IContext context, int entity);
+    };
 }

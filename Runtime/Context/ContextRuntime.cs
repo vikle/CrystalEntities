@@ -17,6 +17,7 @@ namespace CrystalEntities
 
     partial class Context
     {
+        //IStartSystem
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void RunStart()
         {
@@ -25,11 +26,11 @@ namespace CrystalEntities
                 if (m_allSystems[i] is IStartSystem system)
                 {
                     RunOnStart(system);
-                    CallStart_Debug(system);
+                    RunOnStart_Debug(system);
                 }
             }
         }
-        
+
         [Conditional("CRYSTAL_ENTITIES_RELEASE"), MethodImpl(MethodImplOptions.AggressiveInlining)]
         private void RunOnStart(IStartSystem system)
         {
@@ -37,9 +38,9 @@ namespace CrystalEntities
             system.OnStart(this);
             ProfilerAPI.EndSample();
         }
-        
+
         [Conditional("CRYSTAL_ENTITIES_DEBUG"), MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private void CallStart_Debug(IStartSystem system)
+        private void RunOnStart_Debug(IStartSystem system)
         {
             try
             {
@@ -52,7 +53,8 @@ namespace CrystalEntities
                 LoggerAPI.LogException(e);
             }
         }
-        
+
+        //IFixedUpdateSystem
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void RunFixedUpdate()
         {
@@ -62,7 +64,7 @@ namespace CrystalEntities
                 RunOnFixedUpdate_Debug(i);
             }
         }
-        
+
         [Conditional("CRYSTAL_ENTITIES_RELEASE"), MethodImpl(MethodImplOptions.AggressiveInlining)]
         private void RunOnFixedUpdate(int index)
         {
@@ -74,7 +76,7 @@ namespace CrystalEntities
             ProfilerAPI.EndSample();
 #endif
         }
-        
+
         [Conditional("CRYSTAL_ENTITIES_DEBUG"), MethodImpl(MethodImplOptions.AggressiveInlining)]
         private void RunOnFixedUpdate_Debug(int index)
         {
@@ -93,8 +95,8 @@ namespace CrystalEntities
                 LoggerAPI.LogException(e);
             }
         }
-        
-        
+
+        //IUpdateSystem
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void RunUpdate()
         {
@@ -104,7 +106,7 @@ namespace CrystalEntities
                 RunOnUpdate_Debug(i);
             }
         }
-        
+
         [Conditional("CRYSTAL_ENTITIES_RELEASE"), MethodImpl(MethodImplOptions.AggressiveInlining)]
         private void RunOnUpdate(int index)
         {
@@ -116,7 +118,7 @@ namespace CrystalEntities
             ProfilerAPI.EndSample();
 #endif
         }
-       
+
         [Conditional("CRYSTAL_ENTITIES_DEBUG"), MethodImpl(MethodImplOptions.AggressiveInlining)]
         private void RunOnUpdate_Debug(int index)
         {
@@ -135,8 +137,8 @@ namespace CrystalEntities
                 LoggerAPI.LogException(e);
             }
         }
-        
-        
+
+        //ILateUpdateSystem
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void RunLateUpdate()
         {
@@ -158,7 +160,7 @@ namespace CrystalEntities
             ProfilerAPI.EndSample();
 #endif
         }
-        
+
         [Conditional("CRYSTAL_ENTITIES_DEBUG"), MethodImpl(MethodImplOptions.AggressiveInlining)]
         private void RunOnLateUpdate_Debug(int index)
         {
@@ -168,6 +170,90 @@ namespace CrystalEntities
                 ProfilerAPI.BeginSample(m_lateUpdateSystemsNames[index]);
 #endif
                 m_lateUpdateSystems[index].OnLateUpdate(this);
+#if CRYSTAL_ENTITIES_PROFILING
+                ProfilerAPI.EndSample();
+#endif
+            }
+            catch (Exception e)
+            {
+                LoggerAPI.LogException(e);
+            }
+        }
+
+        //IEntityInitializeSystem
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        private void RunAfterEntityCreated(int entity)
+        {
+            for (int i = 0, i_max = m_entityInitializeSystems.Length; i < i_max; i++)
+            {
+                RunOnRunAfterEntityCreated(i, entity);
+                RunOnRunAfterEntityCreated_Debug(i, entity);
+            }
+        }
+
+        [Conditional("CRYSTAL_ENTITIES_RELEASE"), MethodImpl(MethodImplOptions.AggressiveInlining)]
+        private void RunOnRunAfterEntityCreated(int index, int entity)
+        {
+#if CRYSTAL_ENTITIES_PROFILING
+            ProfilerAPI.BeginSample(m_entityInitializeSystemsNames[index]);
+#endif
+            m_entityInitializeSystems[index].OnAfterEntityCreated(this, entity);
+#if CRYSTAL_ENTITIES_PROFILING
+            ProfilerAPI.EndSample();
+#endif
+        }
+
+        [Conditional("CRYSTAL_ENTITIES_DEBUG"), MethodImpl(MethodImplOptions.AggressiveInlining)]
+        private void RunOnRunAfterEntityCreated_Debug(int index, int entity)
+        {
+            try
+            {
+#if CRYSTAL_ENTITIES_PROFILING
+                ProfilerAPI.BeginSample(m_entityInitializeSystemsNames[index]);
+#endif
+                m_entityInitializeSystems[index].OnAfterEntityCreated(this, entity);
+#if CRYSTAL_ENTITIES_PROFILING
+                ProfilerAPI.EndSample();
+#endif
+            }
+            catch (Exception e)
+            {
+                LoggerAPI.LogException(e);
+            }
+        }
+
+        //IEntityTerminateSystem
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        private void RunBeforeEntityDestroyed(int entity)
+        {
+            for (int i = 0, i_max = m_entityTerminateSystems.Length; i < i_max; i++)
+            {
+                RunOnBeforeEntityDestroyed(i, entity);
+                RunOnBeforeEntityDestroyed_Debug(i, entity);
+            }
+        }
+
+        [Conditional("CRYSTAL_ENTITIES_RELEASE"), MethodImpl(MethodImplOptions.AggressiveInlining)]
+        private void RunOnBeforeEntityDestroyed(int index, int entity)
+        {
+#if CRYSTAL_ENTITIES_PROFILING
+            ProfilerAPI.BeginSample(m_entityTerminateSystemsNames[index]);
+#endif
+            m_entityTerminateSystems[index].OnBeforeEntityDestroyed(this, entity);
+#if CRYSTAL_ENTITIES_PROFILING
+            ProfilerAPI.EndSample();
+#endif
+        }
+
+        [Conditional("CRYSTAL_ENTITIES_DEBUG"), MethodImpl(MethodImplOptions.AggressiveInlining)]
+        private void RunOnBeforeEntityDestroyed_Debug(int index, int entity)
+        {
+            try
+            {
+#if CRYSTAL_ENTITIES_PROFILING
+                ProfilerAPI.BeginSample(m_entityTerminateSystemsNames[index]);
+#endif
+                m_entityTerminateSystems[index].OnBeforeEntityDestroyed(this, entity);
 #if CRYSTAL_ENTITIES_PROFILING
                 ProfilerAPI.EndSample();
 #endif

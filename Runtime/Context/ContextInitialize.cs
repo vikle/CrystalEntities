@@ -53,6 +53,8 @@ namespace CrystalEntities
             ArrayEx.WhereCast(all_systems, out m_updateSystems);
             ArrayEx.WhereCast(all_systems, out m_fixedUpdateSystems);
             ArrayEx.WhereCast(all_systems, out m_lateUpdateSystems);
+            ArrayEx.WhereCast(all_systems, out m_entityInitializeSystems);
+            ArrayEx.WhereCast(all_systems, out m_entityTerminateSystems);
             
             m_systemsCache.Clear();
             m_systemsCache = null;
@@ -61,19 +63,21 @@ namespace CrystalEntities
             m_fixedUpdateSystemsNames = m_fixedUpdateSystems.Select(s => s.GetType().Name).ToArray();
             m_updateSystemsNames = m_updateSystems.Select(s => s.GetType().Name).ToArray();
             m_lateUpdateSystemsNames = m_lateUpdateSystems.Select(s => s.GetType().Name).ToArray();
+            m_entityInitializeSystemsNames = m_entityInitializeSystems.Select(s => s.GetType().Name).ToArray();
+            m_entityTerminateSystemsNames = m_entityTerminateSystems.Select(s => s.GetType().Name).ToArray();
 #endif
         }
 
         private void InjectDependencies()
         {
             var pool_type = typeof(IPool);
-            const BindingFlags k_binding_flags = (BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
+            const BindingFlags k_binding_attr = (BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
 
             for (int i = 0, i_max = m_allSystems.Length; i < i_max; i++)
             {
                 var system = m_allSystems[i];
                 var system_type = system.GetType();
-                var system_fields = system_type.GetFields(k_binding_flags);
+                var system_fields = system_type.GetFields(k_binding_attr);
                 
                 for (int j = 0, j_max = system_fields.Length; j < j_max; j++)
                 {
